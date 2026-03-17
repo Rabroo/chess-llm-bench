@@ -1,0 +1,78 @@
+{
+  "timestamp": "2026-03-16T13:20:53.846014Z",
+  "run_id": "20260316_132053",
+  "models": [
+    "llama3.2:3b",
+    "qwen2.5:7b"
+  ],
+  "prompt_formats": [
+    "fen_only",
+    "pgn+fen",
+    "cot"
+  ],
+  "hypotheses": [
+    "H1",
+    "H2",
+    "H3",
+    "H4",
+    "H5"
+  ],
+  "scoring_method": "Option A",
+  "config_snapshot": {
+    "stockfish": {
+      "path": "/usr/games/stockfish",
+      "depth": 22,
+      "threads": 1,
+      "workers": 24
+    },
+    "ollama": {
+      "base_url": "http://localhost:11434",
+      "timeout": 180,
+      "max_retries": 3
+    },
+    "models": [
+      "llama3.2:3b",
+      "qwen2.5:7b"
+    ],
+    "dataset": {
+      "lichess_source": "local",
+      "lichess_csv_path": "data/lichess_puzzles.csv",
+      "pgn_path": "data/games.pgn"
+    },
+    "benchmark": {
+      "max_positions_per_tier": 50,
+      "random_seed": 42,
+      "prompt_formats": [
+        "fen_only",
+        "pgn+fen",
+        "cot"
+      ]
+    },
+    "evaluation": {
+      "cpl_threshold": 50,
+      "centipawn_eval_range": {
+        "min": -2000,
+        "max": 2000
+      }
+    },
+    "workers": {
+      "count": 4
+    },
+    "correction_loop": {
+      "enabled": true,
+      "control_group": true,
+      "max_attempts": 2
+    },
+    "paths": {
+      "data_dir": "data",
+      "jobs_db": "jobs/jobs.db",
+      "results_file": "results/evaluations.jsonl",
+      "logs_dir": "results/logs",
+      "plots_dir": "results/plots",
+      "metrics_dir": "results/metrics"
+    }
+  },
+  "random_seed": 42,
+  "worker_count": 4,
+  "stockfish_depth": 22
+}

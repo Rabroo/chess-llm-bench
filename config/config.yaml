@@ -1,0 +1,73 @@
+# Chess LLM Benchmark Configuration
+
+stockfish:
+  path: /usr/games/stockfish
+  depth: 15  # Reduced from 22 for ~4x speedup
+  threads: 1
+  workers: 24  # Parallel Stockfish instances
+
+ollama:
+  base_url: http://localhost:11434
+  timeout: 180
+  max_retries: 3
+
+models:
+  # Small (3-7B) - fast
+  - llama3.2:3b
+  - gemma3:4b
+  - qwen2.5:7b
+  - mistral:7b
+  - deepseek-r1:7b
+  - wizardlm2:7b
+
+  # Medium (8-14B)
+  - llama3.2:8b
+  - gemma3:12b
+  - qwen2.5:14b
+  - phi4:14b
+  - deepseek-r1:14b
+  - solar:10.7b
+
+  # Large (30B+) - slow but interesting
+  - qwen2.5:32b
+  - codellama:34b
+  - yi:34b
+  - command-r:35b
+  - mixtral:8x7b
+  - llama3.3:70b
+  - qwen2.5:72b
+
+dataset:
+  lichess_source: local  # "api" or "local"
+  lichess_csv_path: data/lichess_puzzles.csv
+  pgn_path: data/games.pgn
+
+benchmark:
+  max_positions_per_tier: 0  # 0 = unlimited (use all ~1.45M per tier)
+  random_seed: 42
+  prompt_formats:
+    - fen_only
+    - pgn+fen
+    - cot
+
+evaluation:
+  cpl_threshold: 50
+  centipawn_eval_range:
+    min: -2000
+    max: 2000
+
+workers:
+  count: 4
+
+correction_loop:
+  enabled: true
+  control_group: true
+  max_attempts: 2
+
+paths:
+  data_dir: data
+  jobs_db: jobs/jobs.db
+  results_file: results/evaluations.jsonl
+  logs_dir: results/logs
+  plots_dir: results/plots
+  metrics_dir: results/metrics

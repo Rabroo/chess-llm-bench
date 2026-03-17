@@ -1,0 +1,20 @@
+# Python
+venv/
+__pycache__/
+*.pyc
+*.pyo
+.Python
+
+# Large data files
+data/*.json
+data/*.csv
+data/*.zst
+
+# Job database
+jobs/jobs.db
+
+# Results (generated output)
+results/evaluations.jsonl
+
+# OS
+.DS_Store

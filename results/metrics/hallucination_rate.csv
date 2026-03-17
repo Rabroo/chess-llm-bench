@@ -1,0 +1,8 @@
+model,difficulty,hallucination_rate,job_id
+llama3.2:3b,easy,1.0,2
+llama3.2:3b,extreme,1.0,3
+llama3.2:3b,hard,1.0,2
+qwen2.5:7b,easy,0.9615384615384616,52
+qwen2.5:7b,extreme,0.8928571428571429,56
+qwen2.5:7b,hard,0.875,64
+qwen2.5:7b,medium,0.84,50

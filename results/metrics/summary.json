@@ -1,0 +1,256 @@
+{
+  "total_jobs": 355,
+  "models_tested": 2,
+  "positions_tested": 96,
+  "overall_metrics": {
+    "t1_mean_error": 1371.2994350282486,
+    "t1_direction_accuracy": 0.3163841807909605,
+    "t2_legal_rate": 0.11267605633802817,
+    "t2_mean_cpl": 2324.0,
+    "t3_mean_score": 0.43661971830985913
+  },
+  "by_model": [
+    {
+      "model": "llama3.2:3b",
+      "t1_absolute_error_mean": 2568.0,
+      "t1_absolute_error_std": 4087.2534428246986,
+      "t1_absolute_error_median": 350.0,
+      "t1_direction_correct_mean": 0.2777777777777778,
+      "t2_legal_mean": 0.10526315789473684,
+      "t2_cpl_mean": 431.0,
+      "t2_cpl_std": 601.0407640085654,
+      "t2_cpl_median": 431.0,
+      "t3_p1_side_correct_mean": 0.47368421052631576,
+      "t3_p2_theme_correct_mean": 0.10526315789473684,
+      "t3_score_mean": 0.5789473684210527,
+      "t3_score_std": 0.6924826089821247,
+      "job_id_count": 19,
+      "inference_ms_mean": 2129.5263157894738,
+      "inference_ms_median": 636.0
+    },
+    {
+      "model": "qwen2.5:7b",
+      "t1_absolute_error_mean": 1307.1904761904761,
+      "t1_absolute_error_std": 2977.63635992858,
+      "t1_absolute_error_median": 231.0,
+      "t1_direction_correct_mean": 0.31845238095238093,
+      "t2_legal_mean": 0.1130952380952381,
+      "t2_cpl_mean": 2423.6315789473683,
+      "t2_cpl_std": 3763.793984518114,
+      "t2_cpl_median": 458.0,
+      "t3_p1_side_correct_mean": 0.3541666666666667,
+      "t3_p2_theme_correct_mean": 0.0744047619047619,
+      "t3_score_mean": 0.42857142857142855,
+      "t3_score_std": 0.5579432226121654,
+      "job_id_count": 336,
+      "inference_ms_mean": 730.0595238095239,
+      "inference_ms_median": 639.5
+    }
+  ],
+  "by_difficulty": [
+    {
+      "model": "llama3.2:3b",
+      "difficulty": "easy",
+      "t1_absolute_error": 363.5,
+      "t2_cpl": NaN,
+      "t2_legal": 0.0,
+      "t3_score": 1.0,
+      "job_id": 2
+    },
+    {
+      "model": "llama3.2:3b",
+      "difficulty": "extreme",
+      "t1_absolute_error": 27.333333333333332,
+      "t2_cpl": NaN,
+      "t2_legal": 0.0,
+      "t3_score": 0.3333333333333333,
+      "job_id": 3
+    },
+    {
+      "model": "llama3.2:3b",
+      "difficulty": "hard",
+      "t1_absolute_error": 205.0,
+      "t2_cpl": NaN,
+      "t2_legal": 0.0,
+      "t3_score": 0.0,
+      "job_id": 2
+    },
+    {
+      "model": "qwen2.5:7b",
+      "difficulty": "easy",
+      "t1_absolute_error": 1441.2307692307693,
+      "t2_cpl": 452.5,
+      "t2_legal": 0.038461538461538464,
+      "t3_score": 0.38461538461538464,
+      "job_id": 52
+    },
+    {
+      "model": "qwen2.5:7b",
+      "difficulty": "extreme",
+      "t1_absolute_error": 180.39285714285714,
+      "t2_cpl": 2028.0,
+      "t2_legal": 0.10714285714285714,
+      "t3_score": 0.32142857142857145,
+      "job_id": 56
+    },
+    {
+      "model": "qwen2.5:7b",
+      "difficulty": "hard",
+      "t1_absolute_error": 714.796875,
+      "t2_cpl": 6476.625,
+      "t2_legal": 0.125,
+      "t3_score": 0.40625,
+      "job_id": 64
+    },
+    {
+      "model": "qwen2.5:7b",
+      "difficulty": "medium",
+      "t1_absolute_error": 236.8,
+      "t2_cpl": 1809.75,
+      "t2_legal": 0.16,
+      "t3_score": 0.38,
+      "job_id": 50
+    }
+  ],
+  "by_phase": [
+    {
+      "model": "llama3.2:3b",
+      "phase": "endgame",
+      "t1_absolute_error": 4354.6,
+      "t2_cpl": 6.0,
+      "t3_score": 0.45454545454545453,
+      "job_id": 11
+    },
+    {
+      "model": "llama3.2:3b",
+      "phase": "middlegame",
+      "t1_absolute_error": 271.85714285714283,
+      "t2_cpl": NaN,
+      "t3_score": 0.7142857142857143,
+      "job_id": 7
+    },
+    {
+      "model": "llama3.2:3b",
+      "phase": "opening",
+      "t1_absolute_error": 775.0,
+      "t2_cpl": 856.0,
+      "t3_score": 1.0,
+      "job_id": 1
+    },
+    {
+      "model": "qwen2.5:7b",
+      "phase": "endgame",
+      "t1_absolute_error": 2615.7678571428573,
+      "t2_cpl": 4689.0,
+      "t3_score": 0.24107142857142858,
+      "job_id": 112
+    },
+    {
+      "model": "qwen2.5:7b",
+      "phase": "middlegame",
+      "t1_absolute_error": 780.5054945054945,
+      "t2_cpl": 2647.7096774193546,
+      "t3_score": 0.5714285714285714,
+      "job_id": 182
+    },
+    {
+      "model": "qwen2.5:7b",
+      "phase": "opening",
+      "t1_absolute_error": 99.95238095238095,
+      "t2_cpl": 128.2,
+      "t3_score": 0.30952380952380953,
+      "job_id": 42
+    }
+  ],
+  "by_source": [
+    {
+      "model": "llama3.2:3b",
+      "source": "generated",
+      "t1_absolute_error": 4091.3636363636365,
+      "t2_cpl": 431.0,
+      "t2_legal": 0.16666666666666666,
+      "t3_score": 0.6666666666666666,
+      "job_id": 12
+    },
+    {
+      "model": "llama3.2:3b",
+      "source": "lichess_puzzles",
+      "t1_absolute_error": 174.14285714285714,
+      "t2_cpl": NaN,
+      "t2_legal": 0.0,
+      "t3_score": 0.42857142857142855,
+      "job_id": 7
+    },
+    {
+      "model": "qwen2.5:7b",
+      "source": "generated",
+      "t1_absolute_error": 2601.6052631578946,
+      "t2_cpl": 909.5714285714286,
+      "t2_legal": 0.12280701754385964,
+      "t3_score": 0.5350877192982456,
+      "job_id": 114
+    },
+    {
+      "model": "qwen2.5:7b",
+      "source": "lichess_puzzles",
+      "t1_absolute_error": 642.490990990991,
+      "t2_cpl": 3306.8333333333335,
+      "t2_legal": 0.10810810810810811,
+      "t3_score": 0.3738738738738739,
+      "job_id": 222
+    }
+  ],
+  "hypothesis_tests": {
+    "H1": {
+      "description": "T1 error increases with difficulty",
+      "supported": false,
+      "values": {
+        "easy": 1401.3148148148148,
+        "medium": 236.8,
+        "hard": 699.3484848484849,
+        "extreme": 172.61016949152543
+      }
+    },
+    "H2": {
+      "description": "T2 CPL increases with difficulty",
+      "supported": false,
+      "values": {
+        "easy": 452.5,
+        "medium": 1809.75,
+        "hard": 6476.625,
+        "extreme": 2028.0
+      }
+    },
+    "H3": {
+      "description": "T3 score decreases with difficulty",
+      "supported": false,
+      "values": {
+        "easy": 0.4074074074074074,
+        "medium": 0.38,
+        "hard": 0.3939393939393939,
+        "extreme": 0.3220338983050847
+      }
+    },
+    "H4": {
+      "description": "Larger models perform better within family",
+      "supported": true,
+      "by_family": {}
+    },
+    "H5": {
+      "description": "Better T3 vs T2 on openings, worse on endgames",
+      "phase_data": {
+        "t2_legal": {
+          "endgame": 0.024390243902439025,
+          "middlegame": 0.164021164021164,
+          "opening": 0.13953488372093023
+        },
+        "t3_score": {
+          "endgame": 0.2601626016260163,
+          "middlegame": 0.5767195767195767,
+          "opening": 0.32558139534883723
+        }
+      },
+      "note": "Requires detailed relative performance analysis"
+    }
+  }
+}
