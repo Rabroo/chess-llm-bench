@@ -27,6 +27,12 @@ def main():
         help="Only estimate job count, don't create jobs",
     )
     parser.add_argument(
+        "--tier",
+        choices=["easy", "medium", "hard", "extreme"],
+        default=None,
+        help="Only generate jobs for a specific difficulty tier",
+    )
+    parser.add_argument(
         "-v", "--verbose",
         action="store_true",
         help="Enable verbose output",
@@ -59,8 +65,9 @@ def main():
         print(f"  Total (est.): {estimate['total_estimate']}")
     else:
         # Generate jobs
-        logger.info("Generating benchmark jobs...")
-        inserted = populate_job_queue(config)
+        tier_msg = f" for tier: {args.tier}" if args.tier else ""
+        logger.info(f"Generating benchmark jobs{tier_msg}...")
+        inserted = populate_job_queue(config, tier=args.tier)
         print(f"\nInserted {inserted} jobs into the queue")
 
 

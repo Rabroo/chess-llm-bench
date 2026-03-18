@@ -103,25 +103,35 @@ class Worker:
             self.job_queue.complete_job(job_id)
             return None
 
+        # Enrich job with position data from the JSON dataset
+        pos = self.data_loader.get_by_id(job["position_id"])
+        if pos is None:
+            error_msg = f"Position {job['position_id']} not found in dataset"
+            logger.error(f"Job {job_id}: {error_msg}")
+            self.job_queue.fail_job(job_id, error_msg)
+            return None
+        job = {
+            **job,
+            "fen": pos["fen"],
+            "pgn_moves": pos.get("pgn_moves", ""),
+            "difficulty": pos.get("difficulty"),
+            "phase": pos.get("phase"),
+            "source": pos.get("source"),
+            "theme": pos.get("theme", ""),
+            "stockfish_eval": pos.get("stockfish_eval", 0),
+            "stockfish_best_move": pos.get("stockfish_best_move", ""),
+        }
+
         logger.info(f"Processing job {job_id} ({job['model']})")
 
         # Build position dict for scoring
         position = {
             "id": job["position_id"],
             "fen": job["fen"],
-            "stockfish_eval": job.get("stockfish_eval", 0),
-            "stockfish_best_move": job.get("stockfish_best_move", ""),
-            "theme": job.get("theme", ""),
+            "stockfish_eval": job["stockfish_eval"],
+            "stockfish_best_move": job["stockfish_best_move"],
+            "theme": job["theme"],
         }
-
-        # If stockfish eval not in job, try to get from data loader
-        if "stockfish_eval" not in job:
-            loaded_pos = self.data_loader.get_by_id(job["position_id"])
-            if loaded_pos:
-                position["stockfish_eval"] = loaded_pos.get("stockfish_eval", 0)
-                position["stockfish_best_move"] = loaded_pos.get(
-                    "stockfish_best_move", ""
-                )
 
         # Build prompt
         prompt = build_prompt(

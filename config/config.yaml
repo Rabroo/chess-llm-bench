@@ -48,7 +48,7 @@ dataset:
   pgn_path: data/games.pgn
 
 benchmark:
-  max_positions_per_tier: 0  # 0 = unlimited (use all ~1.45M per tier)
+  max_positions_per_tier: 0  # 0 = unlimited (use all positions)
   random_seed: 42
   prompt_formats:
     - fen_only
@@ -71,7 +71,7 @@ correction_loop:
 
 paths:
   data_dir: data
-  jobs_db: jobs/jobs.db
+  jobs_db: /mnt/shared/chess-llm-bench/jobs/jobs.db
   results_file: results/evaluations.jsonl
   logs_dir: results/logs
   plots_dir: results/plots

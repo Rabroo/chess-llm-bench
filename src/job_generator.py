@@ -113,14 +113,8 @@ def generate_correction_jobs(
         "job_id": correction_job_id,
         "job_type": "correction",
         "position_id": follow_up_position["id"],
-        "fen": follow_up_position["fen"],
-        "pgn_moves": follow_up_position.get("pgn_moves", ""),
         "model": model,
         "prompt_format": prompt_format,
-        "difficulty": follow_up_position.get("difficulty"),
-        "phase": follow_up_position.get("phase"),
-        "source": follow_up_position.get("source"),
-        "theme": follow_up_position.get("theme"),
         "trial": 2,
         "parent_job_id": parent_job_id,
         "hash": correction_hash,
@@ -140,14 +134,8 @@ def generate_correction_jobs(
         "job_id": control_job_id,
         "job_type": "control",
         "position_id": follow_up_position["id"],
-        "fen": follow_up_position["fen"],
-        "pgn_moves": follow_up_position.get("pgn_moves", ""),
         "model": model,
         "prompt_format": prompt_format,
-        "difficulty": follow_up_position.get("difficulty"),
-        "phase": follow_up_position.get("phase"),
-        "source": follow_up_position.get("source"),
-        "theme": follow_up_position.get("theme"),
         "trial": 2,
         "parent_job_id": parent_job_id,
         "paired_control_job_id": correction_job_id,
@@ -164,6 +152,7 @@ def populate_job_queue(
     config: dict[str, Any],
     data_loader: DataLoader | None = None,
     job_queue: JobQueue | None = None,
+    tier: str | None = None,
 ) -> int:
     """Populate the job queue with all benchmark jobs.
 
@@ -189,8 +178,18 @@ def populate_job_queue(
     if job_queue is None:
         job_queue = JobQueue(db_path)
 
-    # Load all positions
-    positions = data_loader.load_all()
+    # Load positions, respecting max_positions_per_tier and optional tier filter
+    max_per_tier = config.get("benchmark", {}).get("max_positions_per_tier", 0)
+    seed = config.get("benchmark", {}).get("random_seed", 42)
+    tiers_to_load = [tier] if tier else ["easy", "medium", "hard", "extreme"]
+
+    positions = []
+    for t in tiers_to_load:
+        tier_positions = data_loader.load_tier(t)
+        if max_per_tier and max_per_tier > 0:
+            positions.extend(data_loader.sample(tier_positions, count=max_per_tier, seed=seed))
+        else:
+            positions.extend(tier_positions)
 
     if not positions:
         logger.error("No positions loaded from dataset")
@@ -220,14 +219,8 @@ def populate_job_queue(
                     "job_id": job_id,
                     "job_type": "standard",
                     "position_id": pos["id"],
-                    "fen": pos["fen"],
-                    "pgn_moves": pos.get("pgn_moves", ""),
                     "model": model,
                     "prompt_format": prompt_format,
-                    "difficulty": pos.get("difficulty"),
-                    "phase": pos.get("phase"),
-                    "source": pos.get("source"),
-                    "theme": pos.get("theme"),
                     "trial": 1,
                     "hash": job_hash,
                 })

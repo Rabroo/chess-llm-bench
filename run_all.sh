@@ -65,20 +65,36 @@ echo ""
 python scripts/precompute_lc0_batch.py --batch-size 256
 
 print_header "STEP 4/7: PULLING OLLAMA MODELS"
-print_info "Downloading LLM models for benchmarking..."
-echo ""
-python scripts/pull_models.py
+CONFIGURED_MODELS=$(python3 -c "import yaml; c=yaml.safe_load(open('config/config.yaml')); print('\n'.join(c['models']))" 2>/dev/null)
+AVAILABLE_MODELS=$(curl -s http://localhost:11434/api/tags | python3 -c "import json,sys; print('\n'.join(m['name'] for m in json.load(sys.stdin).get('models',[])))" 2>/dev/null)
+MISSING=$(comm -23 <(echo "$CONFIGURED_MODELS" | sort) <(echo "$AVAILABLE_MODELS" | sort))
+if [ -z "$MISSING" ]; then
+    print_info "All models already available - SKIPPING pull"
+    print_info "Delete a model with 'ollama rm <model>' to force re-pull"
+else
+    print_info "Pulling missing models..."
+    echo ""
+    python scripts/pull_models.py
+fi
 
-print_header "STEP 5/7: GENERATING JOBS"
-print_info "Creating benchmark job queue..."
+print_header "STEPS 5+6/7: GENERATING JOBS AND RUNNING BENCHMARK (TIER BY TIER)"
+print_info "Processing one difficulty tier at a time to manage disk usage..."
+WORKERS=$(grep -oP 'count:\s*\K\d+' config/config.yaml || echo '4')
+print_info "Workers: $WORKERS"
 echo ""
-python scripts/generate_jobs.py
 
-print_header "STEP 6/7: RUNNING BENCHMARK"
-print_info "Testing LLMs against chess positions..."
-print_info "Workers: $(grep -oP 'count:\s*\K\d+' config/config.yaml || echo '4')"
-echo ""
-python scripts/run_workers.py --workers 4
+for tier in easy medium hard extreme; do
+    print_header "TIER: $tier"
+    print_info "Generating jobs for $tier tier..."
+    python scripts/generate_jobs.py --tier "$tier"
+
+    print_info "Running workers for $tier tier..."
+    python scripts/run_workers.py --workers "$WORKERS"
+
+    print_info "$tier tier complete. Wiping job DB to free space..."
+    rm -f /mnt/shared/chess-llm-bench/jobs/jobs.db
+    echo ""
+done
 
 print_header "STEP 7/7: GENERATING RESULTS"
 print_info "Creating plots and metrics..."

@@ -35,14 +35,8 @@ class JobQueue:
                     job_id TEXT PRIMARY KEY,
                     job_type TEXT NOT NULL,
                     position_id INTEGER NOT NULL,
-                    fen TEXT NOT NULL,
-                    pgn_moves TEXT,
                     model TEXT NOT NULL,
                     prompt_format TEXT NOT NULL,
-                    difficulty TEXT,
-                    phase TEXT,
-                    source TEXT,
-                    theme TEXT,
                     trial INTEGER DEFAULT 1,
                     status TEXT DEFAULT 'pending',
                     worker_id TEXT,
@@ -62,9 +56,6 @@ class JobQueue:
             )
             conn.execute(
                 "CREATE INDEX IF NOT EXISTS idx_model ON jobs(model)"
-            )
-            conn.execute(
-                "CREATE INDEX IF NOT EXISTS idx_difficulty ON jobs(difficulty)"
             )
             conn.execute(
                 "CREATE INDEX IF NOT EXISTS idx_position_id ON jobs(position_id)"
@@ -91,23 +82,16 @@ class JobQueue:
             with self._connect() as conn:
                 conn.execute("""
                     INSERT INTO jobs (
-                        job_id, job_type, position_id, fen, pgn_moves,
-                        model, prompt_format, difficulty, phase, source,
-                        theme, trial, status, paired_control_job_id,
-                        parent_job_id, hash
-                    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                        job_id, job_type, position_id,
+                        model, prompt_format, trial, status,
+                        paired_control_job_id, parent_job_id, hash
+                    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                 """, (
                     job["job_id"],
                     job.get("job_type", "standard"),
                     job["position_id"],
-                    job["fen"],
-                    job.get("pgn_moves", ""),
                     job["model"],
                     job.get("prompt_format", "pgn+fen"),
-                    job.get("difficulty"),
-                    job.get("phase"),
-                    job.get("source"),
-                    job.get("theme"),
                     job.get("trial", 1),
                     "pending",
                     job.get("paired_control_job_id"),
@@ -135,23 +119,16 @@ class JobQueue:
                 try:
                     conn.execute("""
                         INSERT INTO jobs (
-                            job_id, job_type, position_id, fen, pgn_moves,
-                            model, prompt_format, difficulty, phase, source,
-                            theme, trial, status, paired_control_job_id,
-                            parent_job_id, hash
-                        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                            job_id, job_type, position_id,
+                            model, prompt_format, trial, status,
+                            paired_control_job_id, parent_job_id, hash
+                        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                     """, (
                         job["job_id"],
                         job.get("job_type", "standard"),
                         job["position_id"],
-                        job["fen"],
-                        job.get("pgn_moves", ""),
                         job["model"],
                         job.get("prompt_format", "pgn+fen"),
-                        job.get("difficulty"),
-                        job.get("phase"),
-                        job.get("source"),
-                        job.get("theme"),
                         job.get("trial", 1),
                         "pending",
                         job.get("paired_control_job_id"),
