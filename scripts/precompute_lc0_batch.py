@@ -9,7 +9,7 @@ import numpy as np
 import chess
 
 sys.path.insert(0, str(Path(__file__).parent.parent))
-from src.utils import setup_logging
+from src.utils import setup_logging, load_config
 
 import onnxruntime as ort
 from tqdm import tqdm
@@ -128,6 +128,7 @@ def main():
     parser = argparse.ArgumentParser(description="Fast batch Lc0 evaluation")
     parser.add_argument("--data-dir", default="data")
     parser.add_argument("--batch-size", type=int, default=128)
+    parser.add_argument("--config", default="config/config.yaml")
     parser.add_argument("-v", "--verbose", action="store_true")
     args = parser.parse_args()
 
@@ -135,10 +136,13 @@ def main():
     setup_logging(level=logging.DEBUG if args.verbose else logging.INFO)
     logger = logging.getLogger("chess_llm_bench")
 
+    config = load_config(args.config)
+    onnx_model = config.get("lc0", {}).get("onnx_model", "")
+
     # Load ONNX model
     print("Loading Lc0 ONNX model...")
     sess = ort.InferenceSession(
-        "/home/rabrew/lc0-nets/network.onnx",
+        onnx_model,
         providers=["CUDAExecutionProvider", "CPUExecutionProvider"]
     )
     print(f"Using providers: {sess.get_providers()}")

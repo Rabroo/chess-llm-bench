@@ -15,6 +15,9 @@ jobs/jobs.db
 
 # Results (generated output)
 results/evaluations.jsonl
+results/plots/
+results/metrics/
+results/logs/
 
 # OS
 .DS_Store

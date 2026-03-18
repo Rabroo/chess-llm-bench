@@ -37,13 +37,13 @@ class Worker:
         self.config = config
         self.dry_run = dry_run
 
-        # Initialize components
+        # Initialize components — resolve paths to absolute to survive multiprocessing cwd changes
         paths = config.get("paths", {})
-        self.job_queue = JobQueue(paths.get("jobs_db", "jobs/jobs.db"))
+        self.job_queue = JobQueue(os.path.abspath(paths.get("jobs_db", "jobs/jobs.db")))
         self.result_writer = ResultWriter(
-            paths.get("results_file", "results/evaluations.jsonl")
+            os.path.abspath(paths.get("results_file", "results/evaluations.jsonl"))
         )
-        self.data_loader = DataLoader(paths.get("data_dir", "data"))
+        self.data_loader = DataLoader(os.path.abspath(paths.get("data_dir", "data")))
 
         # Ollama client
         ollama_config = config.get("ollama", {})

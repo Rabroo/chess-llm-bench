@@ -6,6 +6,11 @@ stockfish:
   threads: 1
   workers: 24  # Parallel Stockfish instances
 
+lc0:
+  binary: /home/rabrew/lc0-src/build/release/lc0
+  weights: /home/rabrew/lc0-nets/network.pb
+  onnx_model: /home/rabrew/lc0-nets/network.onnx
+
 ollama:
   base_url: http://localhost:11434
   timeout: 180
