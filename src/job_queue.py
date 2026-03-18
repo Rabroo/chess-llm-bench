@@ -121,7 +121,7 @@ class JobQueue:
             return False
 
     def insert_jobs(self, jobs: list[dict[str, Any]]) -> int:
-        """Insert multiple jobs, skipping duplicates.
+        """Insert multiple jobs in a single connection, skipping duplicates.
 
         Args:
             jobs: List of job dictionaries
@@ -130,9 +130,38 @@ class JobQueue:
             Number of jobs inserted
         """
         inserted = 0
-        for job in jobs:
-            if self.insert_job(job):
-                inserted += 1
+        with self._connect() as conn:
+            for job in jobs:
+                try:
+                    conn.execute("""
+                        INSERT INTO jobs (
+                            job_id, job_type, position_id, fen, pgn_moves,
+                            model, prompt_format, difficulty, phase, source,
+                            theme, trial, status, paired_control_job_id,
+                            parent_job_id, hash
+                        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                    """, (
+                        job["job_id"],
+                        job.get("job_type", "standard"),
+                        job["position_id"],
+                        job["fen"],
+                        job.get("pgn_moves", ""),
+                        job["model"],
+                        job.get("prompt_format", "pgn+fen"),
+                        job.get("difficulty"),
+                        job.get("phase"),
+                        job.get("source"),
+                        job.get("theme"),
+                        job.get("trial", 1),
+                        "pending",
+                        job.get("paired_control_job_id"),
+                        job.get("parent_job_id"),
+                        job.get("hash"),
+                    ))
+                    inserted += 1
+                except sqlite3.IntegrityError:
+                    pass
+            conn.commit()
         return inserted
 
     def claim_job(self, worker_id: str) -> dict[str, Any] | None:

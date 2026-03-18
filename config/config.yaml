@@ -21,7 +21,7 @@ models:
   - wizardlm2:7b
 
   # Medium (8-14B)
-  - llama3.2:8b
+  - llama3.1:8b
   - gemma3:12b
   - qwen2.5:14b
   - phi4:14b

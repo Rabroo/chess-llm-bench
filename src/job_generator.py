@@ -205,14 +205,43 @@ def populate_job_queue(
         f"{len(models)} models, {len(prompt_formats)} formats"
     )
 
-    # Generate standard jobs
-    jobs = generate_standard_jobs(positions, models, prompt_formats)
+    # Generate and insert jobs in batches to avoid OOM
+    BATCH_SIZE = 10000
+    inserted = 0
+    total_generated = 0
 
-    # Insert jobs (duplicates are automatically skipped)
-    inserted = job_queue.insert_jobs(jobs)
+    batch = []
+    for pos in positions:
+        for model in models:
+            for prompt_format in prompt_formats:
+                job_id = generate_job_id(pos["id"], model, prompt_format)
+                job_hash = compute_hash(pos["fen"], model, prompt_format, "standard", "1")
+                batch.append({
+                    "job_id": job_id,
+                    "job_type": "standard",
+                    "position_id": pos["id"],
+                    "fen": pos["fen"],
+                    "pgn_moves": pos.get("pgn_moves", ""),
+                    "model": model,
+                    "prompt_format": prompt_format,
+                    "difficulty": pos.get("difficulty"),
+                    "phase": pos.get("phase"),
+                    "source": pos.get("source"),
+                    "theme": pos.get("theme"),
+                    "trial": 1,
+                    "hash": job_hash,
+                })
+                total_generated += 1
+
+                if len(batch) >= BATCH_SIZE:
+                    inserted += job_queue.insert_jobs(batch)
+                    batch = []
+
+    if batch:
+        inserted += job_queue.insert_jobs(batch)
 
     logger.info(
-        f"Inserted {inserted} jobs ({len(jobs) - inserted} duplicates skipped)"
+        f"Inserted {inserted} jobs ({total_generated - inserted} duplicates skipped)"
     )
 
     return inserted
